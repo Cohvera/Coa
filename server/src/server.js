@@ -1,0 +1,1 @@
+import Fastify from 'fastify'; const app=Fastify(); const dashboard={company:'Q-Home',bank:8635,receivables:59990,payables:101686,drafts:50000}; app.get('/api/dashboard',async()=>dashboard); app.listen({port:3001,host:'0.0.0.0'});
