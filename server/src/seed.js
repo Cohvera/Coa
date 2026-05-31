@@ -1,0 +1,1 @@
+console.log('Seed Q-Home: bank=8635 receivables=59990 payables=101686 drafts=50000');
