@@ -1,1 +1,1 @@
-{"type":"module","scripts":{"dev":"node --watch src/server.js","start":"node src/server.js"},"dependencies":{"@fastify/cors":"latest","better-sqlite3":"latest","fastify":"latest"},"devDependencies":{}}
+{"type":"module","scripts":{"dev":"node --watch src/server.js","start":"node src/server.js","migrate":"node src/migrate.js","seed":"node src/seed.js"},"dependencies":{"@fastify/cors":"latest","fastify":"latest","pg":"latest"},"devDependencies":{}}
