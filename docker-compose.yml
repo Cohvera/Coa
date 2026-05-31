@@ -1,0 +1,9 @@
+services:
+  portal:
+    build: .
+    ports:
+      - '3000:3000'
+  api:
+    build: ./server
+    ports:
+      - '3001:3001'
