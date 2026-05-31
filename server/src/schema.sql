@@ -1,0 +1,4 @@
+create table if not exists companies(id serial primary key,name text not null);
+create table if not exists kpi_snapshots(id serial primary key,company_id int references companies(id),snapshot_date date,bank numeric,receivables numeric,payables numeric,drafts numeric,wip numeric,gross_margin_pct numeric);
+create table if not exists cashflow_forecasts(id serial primary key,company_id int references companies(id),week_no int,income numeric,expense numeric);
+create table if not exists projects(id serial primary key,company_id int references companies(id),name text,revenue numeric,cost numeric,status text);
