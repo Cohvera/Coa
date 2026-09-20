@@ -1,9 +1,31 @@
 services:
   portal:
-    build: .
+    build:
+      context: .
+      args:
+        VITE_QHOME_URL: ${VITE_QHOME_URL:-}
     ports:
       - '3000:3000'
   api:
+    profiles: ['legacy-api']
     build: ./server
     ports:
       - '3001:3001'
+  qhome:
+    build: ./qhome
+    ports:
+      - '8000:8000'
+    environment:
+      QHOME_ADMIN_PASSWORD: ${QHOME_ADMIN_PASSWORD:?Vul QHOME_ADMIN_PASSWORD in .env in}
+      QHOME_USER_PASSWORD: ${QHOME_USER_PASSWORD:?Vul QHOME_USER_PASSWORD in .env in}
+      QHOME_SECURE_COOKIE: ${QHOME_SECURE_COOKIE:-0}
+    volumes:
+      - qhome-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'python', '-c', 'import urllib.request; urllib.request.urlopen("http://localhost:8000/api/health")']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+volumes:
+  qhome-data:

@@ -1,9 +1,11 @@
-FROM node:22-alpine AS build
+FROM node:24-alpine AS build
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+COPY package.json pnpm-lock.yaml ./
+RUN npm install -g pnpm@11.25.0 && pnpm install --frozen-lockfile
 COPY . .
-RUN npm run build
+ARG VITE_QHOME_URL
+ENV VITE_QHOME_URL=$VITE_QHOME_URL
+RUN pnpm run build
 
 FROM node:22-alpine
 WORKDIR /app

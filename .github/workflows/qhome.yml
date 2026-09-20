@@ -1,0 +1,33 @@
+name: Q-Home checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r qhome/requirements.txt httpx==0.28.1
+      - run: python -m compileall app && python -m unittest discover -s tests -v
+        working-directory: qhome
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install -g pnpm@11.25.0 && pnpm install --frozen-lockfile && pnpm run build
+      - name: Compose smoke test
+        env:
+          QHOME_ADMIN_PASSWORD: ci-ephemeral-admin-only
+          QHOME_USER_PASSWORD: ci-ephemeral-calculator-only
+        run: |
+          docker compose up -d --build --wait
+          curl -f http://localhost:8000/
+          curl -f http://localhost:3000/
+      - name: Container logs
+        if: failure()
+        env:
+          QHOME_ADMIN_PASSWORD: ci-ephemeral-admin-only
+          QHOME_USER_PASSWORD: ci-ephemeral-calculator-only
+        run: docker compose logs
